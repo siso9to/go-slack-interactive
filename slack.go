@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"strings"
+	//"strings"
 
 	"github.com/nlopes/slack"
 )
@@ -49,19 +49,27 @@ func (s *SlackListener) handleMessageEvent(ev *slack.MessageEvent) error {
 	}
 
 	// Only response mention to bot. Ignore else.
+	/*
 	if !strings.HasPrefix(ev.Msg.Text, fmt.Sprintf("<@%s> ", s.botID)) {
 		return nil
 	}
+	*/
 
 	// Parse message
+	/*
 	m := strings.Split(strings.TrimSpace(ev.Msg.Text), " ")[1:]
-	if len(m) == 0 || m[0] != "hey" {
+	if len(m) == 0 || m[0] != "error" {
+		return fmt.Errorf("invalid message")
+	}
+	*/
+
+	if ev.Msg.Text != "error" {
 		return fmt.Errorf("invalid message")
 	}
 
 	// value is passed to message handler when request is approved.
 	attachment := slack.Attachment{
-		Text:       "Which beer do you want? :beer:",
+		Text:       "確認しましたか？",
 		Color:      "#f9a41b",
 		CallbackID: "beer",
 		Actions: []slack.AttachmentAction{
@@ -70,24 +78,12 @@ func (s *SlackListener) handleMessageEvent(ev *slack.MessageEvent) error {
 				Type: "select",
 				Options: []slack.AttachmentActionOption{
 					{
-						Text:  "Asahi Super Dry",
-						Value: "Asahi Super Dry",
+						Text:  "確認して対応する",
+						Value: "do",
 					},
 					{
-						Text:  "Kirin Lager Beer",
-						Value: "Kirin Lager Beer",
-					},
-					{
-						Text:  "Sapporo Black Label",
-						Value: "Sapporo Black Label",
-					},
-					{
-						Text:  "Suntory Malts",
-						Value: "Suntory Malts",
-					},
-					{
-						Text:  "Yona Yona Ale",
-						Value: "Yona Yona Ale",
+						Text:  "対応しない",
+						Value: "no",
 					},
 				},
 			},

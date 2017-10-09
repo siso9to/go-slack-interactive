@@ -2,12 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+//	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
-	"strings"
+//	"strings"
 
 	"github.com/nlopes/slack"
 )
@@ -56,22 +56,23 @@ func (h interactionHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	action := message.Actions[0]
 	switch action.Name {
 	case actionSelect:
-		value := action.SelectedOptions[0].Value
+		//value := action.SelectedOptions[0].Value
 
 		// Overwrite original drop down message.
 		originalMessage := message.OriginalMessage
-		originalMessage.Attachments[0].Text = fmt.Sprintf("OK to order %s ?", strings.Title(value))
+		//originalMessage.Attachments[0].Text = fmt.Sprintf("OK to order %s ?", strings.Title(value))
+		originalMessage.Attachments[0].Text = "「完了」もしくは「対応しない」を押してください。"
 		originalMessage.Attachments[0].Actions = []slack.AttachmentAction{
 			{
 				Name:  actionStart,
-				Text:  "Yes",
+				Text:  "完了",
 				Type:  "button",
 				Value: "start",
 				Style: "primary",
 			},
 			{
 				Name:  actionCancel,
-				Text:  "No",
+				Text:  "対応しない",
 				Type:  "button",
 				Style: "danger",
 			},
@@ -82,11 +83,13 @@ func (h interactionHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(&originalMessage)
 		return
 	case actionStart:
-		title := ":ok: your order was submitted! yay!"
+		//title := ":ok: your order was submitted! yay!"
+		title := ":ok: 対応完了！"
 		responseMessage(w, message.OriginalMessage, title, "")
 		return
 	case actionCancel:
-		title := fmt.Sprintf(":x: @%s canceled the request", message.User.Name)
+		//title := fmt.Sprintf(":x: @%s canceled the request", message.User.Name)
+		title := "対応しない"
 		responseMessage(w, message.OriginalMessage, title, "")
 		return
 	default:
