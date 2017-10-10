@@ -6,6 +6,7 @@ import (
 	//"strings"
 
 	"github.com/nlopes/slack"
+	"strings"
 )
 
 const (
@@ -63,7 +64,7 @@ func (s *SlackListener) handleMessageEvent(ev *slack.MessageEvent) error {
 	}
 	*/
 
-	if ev.Msg.Text != "error" {
+	if ! strings.Contains(ev.Msg.Text,"state is now ALARM:") {
 		return fmt.Errorf("invalid message")
 	}
 
